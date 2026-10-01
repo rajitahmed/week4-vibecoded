@@ -1,10 +1,23 @@
 [theme]
-base = "light"
-primaryColor = "#9C402A"
-backgroundColor = "#FAF7F0"
-secondaryBackgroundColor = "#EFE9DD"
-textColor = "#252722"
-font = "sans serif"
+base = "dark"
+primaryColor = "#86a8c8"
+backgroundColor = "#111214"
+secondaryBackgroundColor = "#1a1b1e"
+textColor = "#c6c9c7"
+font = "Fira Mono, monospace"
+
+[[theme.fontFaces]]
+family = "Fira Mono"
+url = "app/static/fonts/fira-mono-regular.woff2"
+weight = "400"
+
+[[theme.fontFaces]]
+family = "Fira Mono"
+url = "app/static/fonts/fira-mono-bold.woff2"
+weight = "700"
+
+[server]
+enableStaticServing = true
 
 [browser]
 gatherUsageStats = false

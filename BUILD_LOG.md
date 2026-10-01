@@ -55,3 +55,32 @@ Two separate code-review passes checked the assignment requirements and implemen
 The first browser pass found that Streamlit overrode the heading font and dimmed the explanatory captions. The initial comparison data grids also required horizontal scrolling to see all fields. The revision strengthens the typography/caption CSS and replaces the two fixed comparison grids with wrapping static tables. This was an assistant correction based on observed rendering, not a user-requested revision.
 
 After the revision, all eight tests passed again and `pip check` reported no broken requirements. Browser inspection confirmed four rendered charts, the intended heading font, readable captions, and no page overflow at desktop and 320-pixel phone widths. The fixed comparison tables expose all four fields on narrow screens. The local preview runs at http://localhost:8501; public deployment remains a later step.
+
+## 2026-10-01 — User-requested terminal restyle
+
+Actual user feedback excerpts (copied from the conversation):
+
+> I really hate how this UI looks could you spice it up so that visually it looks more appealing and such that the functionality is awesome?
+
+> Try not to add more but just switch up typography (I don't want to see the same default for typography) maybe a tmux/ascii styled would be super nice?
+
+> Use [design.md](design.md) to restyle.
+
+The revised interface follows the supplied terminal design system: dark square panes, ANSI-inspired colors with a separate pane identity for each chart, restrained data marks, a pinned tmux-style statusline, and mint keyboard-focus styling. Fira Mono replaces the default interface/chart typography; Departure Mono supplies the pixel-style title. Text stays at 14px in the ordinary interface. Expandable tables keep sample sizes, full movie titles, and the fixed floor comparison available without adding charts or data controls.
+
+The four analyses, the count/share radio control, and the 50–150 ratings slider remain. Calculations and the CSV are unchanged. The direct 50-versus-150 comparison remains in the best-movies pane. `terminal.css` owns the visual tokens; Plotly reads its chart colors from those same tokens. `terminal.js` supplies labelled regions on native Streamlit panes and fits long movie labels to their available chart width.
+
+The self-hosted typography consists of Fira Mono regular/bold Latin and box-drawing symbol subsets from Google Fonts, plus Departure Mono 1.500 from its official project. The five WOFF2 assets total 67,296 bytes. Both use the SIL Open Font License 1.1; complete license texts are bundled in `static/fonts/FiraMono-OFL.txt` and `static/fonts/DepartureMono-OFL.txt`.
+
+Official font sources:
+
+- [Fira Mono in Google Fonts](https://github.com/google/fonts/tree/main/ofl/firamono)
+- [Departure Mono](https://github.com/rektdeckard/departure-mono)
+
+Deployment documentation now includes `terminal.css`, `terminal.js`, and all of `static/fonts/` alongside the existing application files and Streamlit config. Static serving is enabled in `.streamlit/config.toml`; a running server must restart for this setting to take effect. Public deployment remains pending.
+
+Verification at this stage: all eight existing tests pass, and the count/share control and rating-floor slider have been exercised. Font files have valid WOFF2 signatures and their license headers were checked. The final responsive and keyboard review is still in progress; its results will be recorded separately after completion.
+
+Final browser review: all four charts rendered with the bundled fonts loaded. At 320px, 720px, and 1440px the page had no horizontal overflow; panes stacked at narrow widths. The final mobile table check found no overflowing cells. Arrow keys switched the genre chart to shares, and the slider's End key moved to 150, updating the leader to Schindler's List and the statusline to the same floor. Statusline links reached their labelled chart regions. Mint focus borders and the slider focus outline were observed. The browser reported no console errors or warnings during these checks. Reduced-motion behavior is defined in CSS; an actual browser zoom setting was not separately verified.
+
+Corrections made during this review: disabled Plotly's automatic text shrinking, fixed the native slider focus styling for the installed Streamlit version, configured its canvas tables to use Fira Mono, and wrapped mobile table content without reducing the 14px text size. The analysis functions and source CSV remain unchanged.
